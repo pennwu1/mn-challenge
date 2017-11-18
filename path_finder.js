@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 // Prompt: Write a program that finds a path to an exit (bonus: shortest path to an exit)
 
 // Strategy: Implement a weighted graph.
@@ -26,7 +29,7 @@ class Graph {
       for (let j = 0; j < roomDetails[i].length; j += 1) {
         if (j === 0) {
           // store exits
-          if (roomDetails[i][j] === 1) this.exits[i] = true;
+          if (roomDetails[i][j] == 1) this.exits[i] = true;
           continue;
         }
         let door = roomDetails[i][j];
@@ -94,8 +97,20 @@ class Graph {
   }
 }
 
-const numDoors = 6;
-const doorDetails = [[0, 1, 3], [0, 0, 2], [0, 4, 5], [0, 0, 4], [0, 2, 3, 5, 6], [0, 2, 4], [1, 4]]
-const graph = new Graph(numDoors, doorDetails);
-
-console.log(graph.minPath(0));
+const files = process.argv.slice(2);
+files.forEach((file) => {
+  const output2 = fs.readFile(file, 'utf8', (err, data) => {
+    const parsedData = data.split('\n');
+    let numDoors;
+    let doorDetails = [];
+    for (let i = 0; i < parsedData.length; i += 1) {
+      if (i === 0) numDoors = parsedData[i];
+      else {
+        let door = parsedData[i].split(',');
+        doorDetails.push(door);
+      }
+    }
+    const graph = new Graph(numDoors, doorDetails);
+    console.log('shortest path is', graph.minPath(0));
+  });
+});
