@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const readline = require('readline');
 
 // Prompt: write a program that implements a fast spell checker. Given a word, it should calculate if the word is correctly spelled in constant time (with tune-able accuracy).
 
@@ -27,22 +28,27 @@ class SpellChecker {
     });
   }
   // search keyword in dictionary object
-  // returns boolean value
+  // returns correct / not found
   search(keyword) {
-    if (this.dictionary[keyword.toLowerCase()]) return true;
-    return false;
+    if (this.dictionary[keyword.toLowerCase()]) return 'correctly';
+    return 'incorrectly';
   }
 }
 
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
 const spellChecker = new SpellChecker();
-// full word
-console.log(spellChecker.search('crab'));
-console.log(spellChecker.search('water'));
 
-// partial
-console.log(spellChecker.search('suitcase'));
-console.log(spellChecker.search('suitcase'));
+const checkWord = () => {
+  rl.question('What word would you like to check? ', function (answer) {
+    if (answer == 'exit')
+      return rl.close();
+    console.log('Got it! This word is spelled', spellChecker.search(answer) + '.');
+    checkWord();
+  });
+};
 
-// does not exist
-console.log(spellChecker.search('pqr'));
-console.log(spellChecker.search('xyz'));
+checkWord();

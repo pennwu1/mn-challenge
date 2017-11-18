@@ -97,6 +97,7 @@ class Graph {
   }
 }
 
+// read text files
 const files = process.argv.slice(2);
 files.forEach((file) => {
   const output2 = fs.readFile(file, 'utf8', (err, data) => {
